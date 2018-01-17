@@ -18,18 +18,20 @@
         </router-link></div>
     </div>
     <div class="content">
-      <router-view></router-view>
+      <router-view :seller="seller"></router-view>
     </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 import MyHeader from './components/header/header'
+import Goods from "./components/goods/goods"
 
 const ERR_OK = 0
 export default {
   components:{
-    MyHeader
+    MyHeader,
+    Goods
   },
   data(){
     return {
@@ -43,7 +45,7 @@ export default {
           res = res.body;
         if(res.errno === ERR_OK){
           this.seller = res.data;
-          console.log("res.data-->",res.data);
+          console.log("in App.vue[seller]=",res.data);
         }
       });
   }
