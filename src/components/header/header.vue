@@ -217,8 +217,10 @@
       height: 100%
       //filter:blur(10px)
       overflow :auto
-      transition:all 1.5s
+      transition:all 0.5s
       backdrop-filter:blur(10px)
+      z-index :500
+      background: rgba(7,17,27,0.8);
       &.fade-transition
         opacity:1
         background:rgba(7,17,27,0.8)

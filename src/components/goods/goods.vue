@@ -16,7 +16,7 @@
         <li class="food-list" v-for="good in goods" ref="foodList">
           <h1 class="title">{{good.name}}</h1>
           <ul>
-            <li v-for="food in good.foods" class="food-item border-1px">
+            <li @click="selectFood(food,$event)" v-for="food in good.foods" class="food-item border-1px">
               <div class="icon">
                 <img :src="food.icon" alt="" width="57" height="57">
               </div>
@@ -114,6 +114,7 @@
         this._drop(target);
       },
       _drop(target){
+        //体验优化，异步执行下落动画，点击加号会触发两个动画
         this.$nextTick(()=>{
           this.$refs.shopcart.drop(target);
         });
