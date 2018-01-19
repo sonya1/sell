@@ -1,5 +1,6 @@
 <template>
-  <div class="goods">
+  <div>
+    <div class="goods">
     <div class="menu-wrapper" ref="menuWrapper">
       <ul class="menu-list">
         <li class="menu-item" v-for="(good,index) in goods" :class="{'current':currentIndex===index}"
@@ -43,18 +44,22 @@
     </div>
     <shopCart ref="shopcart" :selectFoods="selectFoods" :minPrice="seller.minPrice" :deliveryPrice="seller.deliveryPrice"></shopCart>
   </div>
+    <food :food="selectedFood" ref="food" @add="addFood"></food>
+  </div>
 </template>
 
 <script type="text/ecmascript-6">
   import BScroll from "better-scroll";
   import ShopCart from "../shopcart/shopcart";
   import CartControl from "../cartcontrol/cartcontrol";
+  import Food from '../food/food';
 
   const ERR_OK = 0;
   export default {
     components:{
       ShopCart,
-      CartControl
+      CartControl,
+      Food
     },
     props:{
       seller:{
@@ -65,7 +70,8 @@
       return {
         goods:[],
         listHeight:[],
-        scrollY:0
+        scrollY:0,
+        selectedFood:{}
       };
     },
     computed:{
@@ -158,6 +164,13 @@
           height += item.clientHeight;
           this.listHeight.push(height);
         }
+      },
+      selectFood(food,event){
+        if(!event._constructed){
+          return;
+        }
+        this.selectedFood = food;
+        this.$refs.food.show();
       }
     }
   }
