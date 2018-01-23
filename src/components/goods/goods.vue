@@ -55,6 +55,8 @@
   import Food from '../food/food';
 
   const ERR_OK = 0;
+  const debug = process.env.NODE_ENV !== 'production';
+
   export default {
     components:{
       ShopCart,
@@ -81,6 +83,7 @@
           let height2 = this.listHeight[i+1];
           if(!height2 || (this.scrollY >= height1 && this.scrollY < height2)){
             //console.log("return", i);
+            //this._followScroll(i);
             return i;
           }
         }
@@ -171,6 +174,11 @@
         }
         this.selectedFood = food;
         this.$refs.food.show();
+      },
+      _followScroll(index) {
+        let menuList = this.$refs.menuList;
+        let el = menuList[index];
+        this.meunScroll.scrollToElement(el, 300, 0, -100);
       }
     }
   }

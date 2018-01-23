@@ -43,9 +43,30 @@
                         @toggle="toggleContent">
           </ratingSelect>
 
+          <ul v-show="food.ratings && food.ratings.length">
+            <li v-show="needShow(rating.rateType,rating.text)" v-for="rating in food.ratings" class="rating-item border-1px">
+              <div class="list-header">
+                <span class="time">{{rating.rateTime | formatDate}}</span>
+                <span class="user">
+                  <span class="username">{{rating.username}}</span>
+                  <span class="avatar">
+                    <img :src="rating.avatar" alt="" width="12" height="12">
+                  </span>
+                </span>
+              </div>
+              <div class="list-content">
+                <span class="icon" :class="{'icon-thumb_up':rating.rateType===0,'icon-thumb_down':rating.rateType===1}"></span>
+                <span class="text">{{rating.text}}</span>
+              </div>
+            </li>
+          </ul>
+          <div class="no-rating" v-show="!food.ratings || !food.ratings.length">
+            暂无评价
+          </div>
+
         </div>
       </div>
-  </div>
+    </div>
   </transition>
 </template>
 
@@ -55,9 +76,8 @@
   import CartControl from "../cartcontrol/cartcontrol";
   import Split from "../split/split"
   import RatingSelect from "../ratingSelect/ratingselect"
+  import {formatDate} from "../../common/js/date";
 
-  const POSITIVE = 0;
-  const NEGATIVE = 1;
   const ALL = 2;
 
   export default{
@@ -69,6 +89,12 @@
     props:{
       food:{
         type:Object
+      }
+    },
+    filters:{
+      formatDate(time){
+        let date = new Date(time);
+        return formatDate(date,'yyyy-MM-dd hh:mm');
       }
     },
     data(){
@@ -84,8 +110,18 @@
       };
     },
     methods:{
+      needShow(type,text){
+        if(this.onlyContent && !text){
+          return false;
+        }
+        if(this.selectType === ALL){
+          return true;
+        }else{
+          return type === this.selectType;
+        }
+      },
       selectRating(type){
-        this.type = type;
+        this.selectType = type;
         this.$nextTick(()=>{
           this.scroll.refresh();
         });
@@ -129,6 +165,8 @@
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
+  @import "../../common/stylus/index"
+
   .food
     position :fixed
     width: 100%
@@ -222,4 +260,52 @@
     .food-rating
       .title
         padding: 18px 0 0 18px
+      .rating-item
+        margin:0 18px
+        padding:12px 0
+        border-1px(rgba(7,17,27,0.1))
+        &:last-child
+          border-none()
+        .list-header
+          height:12px
+          margin-bottom: 6px
+          .time
+            float :left
+            font-size:10px
+            color:rgb(147,153,159)
+            line-height: 12px
+          .user
+            float :right
+            .username
+              font-size:10px
+              color:rgb(147,153,159)
+              line-height: 12px
+              margin-right: 6px
+            .avatar
+              display :inline-block
+              width: 12px
+              height: 12px
+              border-radius :50%
+        .list-content
+          font-size:0
+          .icon-thumb_up, .icon-thumb_down
+            display :inline-block
+            vertical-align: top
+            margin-right: 4px
+            line-height: 12px
+            font-size: 12px
+          .icon-thumb_up
+            color: rgb(0, 160, 220)
+          .icon-thumb_down
+            color: rgb(147, 153, 159)
+          .text
+            display :inline-block
+            vertical-align: top
+            font-size:12px
+            color:rgb(7,17,27)
+            line-height: 12px
+      .no-rating
+        padding: 16px 16px
+        font-size: 12px
+        color: rgb(147, 153, 159)
 </style>

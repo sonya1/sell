@@ -22,6 +22,6 @@ const routes = [{
 
 export default new Router({
   linkActiveClass: 'active',
-  mode:'history',
+  //mode:'history',
   routes
 });

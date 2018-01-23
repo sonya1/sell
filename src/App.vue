@@ -1,44 +1,53 @@
 <template>
-  <div id="app">
+  <div>
     <my-header :seller="seller"></my-header>
     <div class="tab border-1px">
       <div class="tab-item">
-        <router-link :to="{path:'/goods'}">
+        <router-link to="/goods">
           商品
         </router-link>
       </div>
       <div class="tab-item">
-        <router-link :to="{path:'/ratings'}">
+        <router-link to="/ratings">
           评论
         </router-link>
       </div>
       <div class="tab-item">
-        <router-link :to="{path:'/seller'}">
+        <router-link to="/seller">
           店家
         </router-link></div>
     </div>
-    <div class="content">
-      <router-view :seller="seller"></router-view>
-    </div>
+    <keep-alive>
+      <router-view :seller="seller" keep-alive></router-view>
+    </keep-alive>
+
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import MyHeader from './components/header/header'
-import Goods from "./components/goods/goods"
+import MyHeader from './components/header/header';
+import {urlParse} from "./common/js/util";
 
 const ERR_OK = 0
+const debug = process.env.NODE_ENV !== 'product';
+
+
 export default {
   components:{
-    MyHeader,
-    Goods
+    MyHeader
   },
   data(){
     return {
-      seller : {}
-    }
+      seller : {
+        id:(()=>{
+          let queryParam = urlParse();
+          return queryParam.id;
+        })()
+      }
+    };
   },
   created(){
+
     this.$http.get('/api/seller')
       .then((res)=>{
           //console.log("res",res);
@@ -61,7 +70,7 @@ export default {
     width: 100%
     height: 40px
     line-height: 40px
-  // border-bottom: 1px solid rgba(7, 17, 27, 0.1)
+    border-bottom: 1px solid rgba(7, 17, 27, 0.1)
     border-1px(rgba(7, 17, 27, 0.1))
     .tab-item
       flex: 1
